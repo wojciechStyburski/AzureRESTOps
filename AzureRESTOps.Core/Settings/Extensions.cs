@@ -1,4 +1,4 @@
-﻿namespace AzureRESTOps.Core.Options;
+﻿namespace AzureRESTOps.Core.Settings;
 
 public static class Extensions
 {
