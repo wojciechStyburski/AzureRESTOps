@@ -6,7 +6,9 @@ public static class Extensions
     {
         builder
             .SetBasePath(AppDomain.CurrentDomain.SetupInformation.ApplicationBase)
-            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true);
+            .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
+            //https://www.youtube.com/watch?v=z7w-aheVrC4
+            .AddUserSecrets<Program>();
 
         return builder;
     }
