@@ -16,3 +16,4 @@ global using Newtonsoft.Json;
 global using AzureRESTOps.Core.Queries.Workitems.GetWorkitems;
 global using AzureRESTOps.Core.Services;
 global using Microsoft.Extensions.Options;
+global using AzureRESTOps.Core.Settings.Validators;
