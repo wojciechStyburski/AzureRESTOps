@@ -8,7 +8,7 @@ public static class Extensions
         services.Configure<AzureDevopsSettings>
         (
             o => configuration.GetSection(AzureDevopsSettingSection).Bind(o)
-        );
+        ).AddOptionsWithValidateOnStart<AzureDevopsSettings, AzureDevopsSettingValidator>();
         
         return services;
     }
