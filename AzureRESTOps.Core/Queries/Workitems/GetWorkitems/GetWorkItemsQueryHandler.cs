@@ -9,7 +9,7 @@ public class GetWorkItemsQueryHandler
     public async Task<ConsoleTable> HandleAsync(GetWorkitemsQuery query)
     {
         var workitems = await workitemsService.GetAsync(query);
-        var workitemsDetails = workitems.Value.Select(x => new WorkitemsDetailsDTO()
+        var workitemsDetails = workitems.Value.Select(x => new WorkitemsDetailsDto()
         {
             Id = x.Id,
             Title = x.Fields.Title,
@@ -18,7 +18,7 @@ public class GetWorkItemsQueryHandler
             CompletedWork = x.Fields.CompletedWork
         }).ToList();
         
-        var table = new ConsoleTable("On", "ID", "State", "Type", "Completed work", "Description");
+        var table = new ConsoleTable("No", "ID", "State", "Type", "Completed work", "Description");
 
         if (!string.IsNullOrWhiteSpace(query.SearchPhrase))
             workitemsDetails = workitemsDetails

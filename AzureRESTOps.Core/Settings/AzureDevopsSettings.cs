@@ -7,4 +7,5 @@ public class AzureDevopsSettings
     public string Project { get; set; }
     public string Token { get; set; }
     public string QueryId { get; set; }
+    public string ApiVersion { get; set; }
 }

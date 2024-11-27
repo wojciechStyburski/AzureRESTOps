@@ -11,3 +11,4 @@ global using CommandLine;
 global using ConsoleTables;
 global using AzureRESTOps.Core.Services;
 global using AzureRESTOps.Shared.Common;
+global using AzureRESTOps.Core.Queries.PullRequests.GetPullRequests;

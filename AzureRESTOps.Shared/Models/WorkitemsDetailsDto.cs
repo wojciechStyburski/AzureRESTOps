@@ -1,6 +1,6 @@
 ﻿namespace AzureRESTOps.Shared.Models;
 
-public class WorkitemsDetailsDTO
+public class WorkitemsDetailsDto
 {
     public int Id { get; set; }
     public string Type { get; set; }

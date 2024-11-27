@@ -17,3 +17,6 @@ global using AzureRESTOps.Core.Queries.Workitems.GetWorkitems;
 global using AzureRESTOps.Core.Services;
 global using Microsoft.Extensions.Options;
 global using AzureRESTOps.Core.Settings.Validators;
+global using AzureRESTOps.Core.Abstractions.Services;
+global using AzureRESTOps.Core.Common;
+global using System.Text.RegularExpressions;
