@@ -1,13 +1,19 @@
 ﻿namespace AzureRESTOps.Core.Services;
 
-public class WorkitemsService(IOptions<AzureDevopsSettings> azureDevopsSettings) : IWorkitemsService
+public class WorkitemsService
+(
+    IOptions<AzureDevopsSettings> azureDevopsSettings,
+    AzureDevopsHelper azureDevopsHelper
+) : IWorkitemsService
 {
     private readonly AzureDevopsSettings _azureDevopsSettings = azureDevopsSettings.Value;
     private string _url = string.Empty;
-    private const string ApiVersion = "6.0";
-
+    private AuthenticationHeaderValue _token;
+    
     public async Task<WorkitemsDetailsResponse> GetAsync(GetWorkitemsQuery query)
     {
+        _token = azureDevopsHelper.CreateAuthorizationToken();
+        
         var workitems = await GetWorkitemsFromQuery();
         var workitemsDetails = await GetWorkitemsDetails(workitems);
 
@@ -20,10 +26,9 @@ public class WorkitemsService(IOptions<AzureDevopsSettings> azureDevopsSettings)
 
         _url = _url
             .AppendPathSegments("wiql", _azureDevopsSettings.QueryId)
-            .SetQueryParam("api-version", ApiVersion);
-        var token = CreateAuthorizationToken();
+            .SetQueryParam("api-version", _azureDevopsSettings.ApiVersion);
 
-        var response = await _url.WithHeader("Authorization", token).GetStringAsync();
+        var response = await _url.WithHeader("Authorization", _token).GetStringAsync();
         var workitems = JsonConvert.DeserializeObject<WorkitemsResponse>(response);
 
         return workitems;
@@ -38,29 +43,22 @@ public class WorkitemsService(IOptions<AzureDevopsSettings> azureDevopsSettings)
         _url = _url
             .AppendPathSegments("workitems")
             .SetQueryParam("ids", workitemIds)
-            .SetQueryParam("api-version", ApiVersion);
+            .SetQueryParam("api-version", _azureDevopsSettings.ApiVersion);
 
-        var token = CreateAuthorizationToken();
-        var response = await _url.WithHeader("Authorization", token).GetStringAsync();
-
+        var response = await _url.WithHeader("Authorization", _token).GetStringAsync();
         var workitemsDetails = JsonConvert.DeserializeObject<WorkitemsDetailsResponse>(response);
 
         return workitemsDetails;
     }
-
-    private AuthenticationHeaderValue CreateAuthorizationToken()
-    {
-        var token = new AuthenticationHeaderValue
-        (
-            "Basic",
-            Convert.ToBase64String(Encoding.ASCII.GetBytes($":{_azureDevopsSettings.Token}"))
-        );
-        return token;
-    }
-
     private void CleanUrl()
     {
         _url = $"{_azureDevopsSettings.BaseUrl}/"
-            .AppendPathSegments(_azureDevopsSettings.Organization,_azureDevopsSettings.Project, "_apis", "wit");
+            .AppendPathSegments
+            (
+                _azureDevopsSettings.Organization,
+                _azureDevopsSettings.Project, 
+                "_apis", 
+                "wit"
+            );
     }
 }

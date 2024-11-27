@@ -2,8 +2,8 @@
 
 internal class App
 (
-    ClipboardService clipboardService,
-    IQueryHandler<GetWorkitemsQuery, ConsoleTable> getWorkitemsQuery
+    IQueryHandler<GetWorkitemsQuery, ConsoleTable> getWorkitemsQuery,
+    IQueryHandler<GetPullRequestsQuery, ConsoleTable> getPullRequestsQuery
 )
 {
     public async Task Run(string[] args)
@@ -15,13 +15,16 @@ internal class App
             await Parser
                     .Default
                     .ParseArguments
-                    <GetWorkitemsQuery>(args)
+                    <GetWorkitemsQuery, GetPullRequestsQuery>(args)
                     .WithParsedAsync(async parsed =>
                     {
                         switch (parsed)
                         {
-                            case GetWorkitemsQuery:
-                                tableResult = await getWorkitemsQuery.HandleAsync(parsed as GetWorkitemsQuery);
+                            case GetWorkitemsQuery query:
+                                tableResult = await getWorkitemsQuery.HandleAsync(query);
+                                break;
+                            case GetPullRequestsQuery query:
+                                tableResult = await getPullRequestsQuery.HandleAsync(query);
                                 break;
                             default:
                                 Console.WriteLine("No action allowed, try again.");
@@ -30,9 +33,7 @@ internal class App
                     });
                     
             tableResult?.Configure(o => o.NumberAlignment = Alignment.Right).Write(Format.Minimal);
-            
-            if (args.Any(arg => arg.Contains(Helpers.WorkitemsCommandName, StringComparison.InvariantCultureIgnoreCase)))
-                await clipboardService.WriteWorkitemDetailsToClipboardAsync(tableResult);
+
         }
         catch (Exception exception)
         {

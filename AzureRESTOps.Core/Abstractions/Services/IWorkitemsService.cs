@@ -1,4 +1,4 @@
-﻿namespace AzureRESTOps.Core.Services;
+﻿namespace AzureRESTOps.Core.Abstractions.Services;
 
 public interface IWorkitemsService
 {
